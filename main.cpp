@@ -22,22 +22,19 @@ int rabbitColStarter();
 
 void askingDirection();
 
-bool validateDirection(int directionCode, int directionInMatrix);
-
 bool drawingField(int farmerStartRow, int farmerStartCol, int rowRabbit, int columnRabbit);
+
+void rabbitDirection(int farmerStartRow, int farmerStartCol, int rowRabbit, int columnRabbit);
 
 int main() {
 
     int farmerStartRow;
     int farmerStartCol;
-    int trackFarmerRow;
-    int trackFarmerCol;
     int rowRabbit;
     int columnRabbit;
     int trackRabbitRow;
     int trackRabbitCol;
     int directionOption;
-    bool isValidDirection;
     bool isRabbitCaught = false;
     srand(time(NULL));
 
@@ -55,13 +52,11 @@ int main() {
         cout << "You can only enter from 0 to 9. Please enter again" << endl;
         cin >> farmerStartCol;
     }
-//        rowRabbit = 2;
-//        columnRabbit = 2;
     rowRabbit = rabbitRowStarter();
     columnRabbit = rabbitColStarter();
     isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, rowRabbit, columnRabbit);
-//    trackFarmerRow = farmerStartRow;
-//    trackFarmerCol = farmerStartCol;
+    rabbitDirection(farmerStartRow, farmerStartCol, rowRabbit, columnRabbit);
+
     do {
         rowRabbit = rabbitRowStarter();
         columnRabbit = rabbitColStarter();
@@ -73,33 +68,78 @@ int main() {
             case 1:
                 if (farmerStartRow == 0) {
                     cout << "Invalid direction. You still stay at where you are" << endl;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
                 }
                 if (farmerStartRow > 0) {
                     farmerStartRow = farmerStartRow - 1;
                     isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
                 }
                 break;
             case 2:
+                if (farmerStartCol == 0) {
+                    cout << "Invalid direction. You still stay at where you are" << endl;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                }
+                if (farmerStartCol > 0) {
+                    farmerStartCol = farmerStartCol - 1;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                }
                 break;
             case 3:
+                if (farmerStartCol == 9) {
+                    cout << "Invalid direction. You still stay at where you are" << endl;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                }
+                if (farmerStartCol < 9) {
+                    farmerStartCol = farmerStartCol + 1;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                }
                 break;
             case 4:
                 if (farmerStartRow == 9) {
                     cout << "Invalid direction. You still stay at where you are" << endl;
+                    isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
                 }
                 if (farmerStartRow < 9) {
                     farmerStartRow = farmerStartRow + 1;
                     isRabbitCaught = drawingField(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
+                    rabbitDirection(farmerStartRow, farmerStartCol, trackRabbitRow, trackRabbitCol);
                 }
                 break;
             default:
-                cout << "Please enter again" << endl;
+                cout << "Invalid Option. Please enter again" << endl;
         }
     } while (!isRabbitCaught);
 
     return 0;
 }
 
+/*	North
+West					East
+    South */
+void rabbitDirection(int farmerStartRow, int farmerStartCol, int rowRabbit, int columnRabbit) {
+    if (farmerStartRow > rowRabbit && farmerStartCol == columnRabbit) {
+        cout << "The rabbit is in the North" << endl;
+    }
+    if (farmerStartRow < rowRabbit && farmerStartCol == columnRabbit) {
+        cout << "The rabbit is in the South" << endl;
+    }
+    if ((farmerStartRow == rowRabbit && farmerStartCol < columnRabbit)
+        || (((farmerStartRow < rowRabbit) || (farmerStartRow > rowRabbit)) && farmerStartCol < columnRabbit)) {
+        cout << "The rabbit is in the East" << endl;
+    }
+    if (farmerStartRow == rowRabbit && farmerStartCol > columnRabbit
+        || (((farmerStartRow < rowRabbit) || (farmerStartRow > rowRabbit)) && farmerStartCol > columnRabbit)) {
+        cout << "The rabbit is in the West" << endl;
+    }
+}
 
 void askingDirection() {
     cout << "Which direction do you want to go?" << endl;
@@ -134,6 +174,7 @@ bool drawingField(int farmerStartRow, int farmerStartCol, int rowRabbit, int col
     }
     if (farmerStartRow == rowRabbit && farmerStartCol == columnRabbit) {
         cout << "You caught the Rabbit" << endl;
+        cout << "\tThank you" << endl;
         isRabbitCaught = true;
     }
     return isRabbitCaught;
